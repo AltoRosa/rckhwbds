@@ -6,7 +6,7 @@
 /*   By: rmiralle <rmiralle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/27 16:18:32 by rmiralle          #+#    #+#             */
-/*   Updated: 2018/01/31 18:20:23 by rmiralle         ###   ########.fr       */
+/*   Updated: 2018/02/02 16:43:49 by rmiralle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+     // ft_putstr("\033[32m"); // la couleur devient 32=verte 31=rouge
+    //    ft_putstr("\033[0m"); // la couleur devient blanche 0=blanc                    
 
 int     check_mistake(char *t, int size)
 {
@@ -24,19 +26,32 @@ int     check_mistake(char *t, int size)
 
     i = 0;
     p = 0;
-   // ft_putstr("nouvelle chaine :\n");
-    
-   // ft_putstr(t);
-
+   ft_putstr("nouvelle chaine :\n\n");
+   ft_putstr(t);
     if (t[4] != '\n' || t[9] != '\n' || t[14] != '\n' || t[19] != '\n')
         return (0);
     while (i < size)
     {
         if (t[i] != '#' && t[i] != '.' && t[i] != '\n')
-            return (0);
+            return (0);       
+        if (t[i] == '#')
+        {
+            // printf("\n%dvaleur de p = ", p);
+            if (t[i - 1] == '#')
+                p++;
+            if (t[i + 1] == '#')
+                p++;
+            if (t[i - 5] == '#')
+                p++;
+            if (t[i + 5] == '#')
+                p++;
+        }
         i++;
     }
-    return(1);
+    printf("\nvaleur de p = %d", p);
+    if (p != 6 && p!= 8)
+       return (0);
+    return (1);
 }
 
 
@@ -60,20 +75,12 @@ int    main(int argc, char **argv)
     }
     while ((ret = read(fd, buf, 21)) > 0)
     {
-        ft_putstr("\033[32mcarrotcake = "); // la couleur devient 32=verte 31=rouge
         if ((carrotcake = check_mistake(buf, ret)) == 0)
         {
-            printf("%d\n", carrotcake);            
+            printf("\nERROR\n\n");
             return (0);
         }
-        printf("%d\n", carrotcake);
-       ft_putstr("\033[0m"); // la couleur devient blanche 0=blanc
-       ft_putstr("\nONCHONCH\n");
-                    
-        
-        // appeller une fonction de verification d'erreur
- //       usleep(5000);
- //       printf("%d\n", ret);
+        printf("\ncarrotcake = %d\n\n", carrotcake);                    
     }
     return (0);
 }
